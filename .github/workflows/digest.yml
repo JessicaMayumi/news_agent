@@ -9,7 +9,7 @@ on:
 jobs:
   send-digest:
     runs-on: ubuntu-latest
-    environment: production
+    environment: OPENAI_API_KEY
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
