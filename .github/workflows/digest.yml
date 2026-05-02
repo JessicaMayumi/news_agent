@@ -9,6 +9,7 @@ on:
 jobs:
   send-digest:
     runs-on: ubuntu-latest
+    environment: production
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
@@ -26,15 +27,14 @@ jobs:
       - name: Run news agent
         env:
           MODEL_PROVIDER: ${{ vars.MODEL_PROVIDER || 'anthropic' }}
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ vars.ANTHROPIC_API_KEY }}
+          OPENAI_API_KEY: ${{ vars.OPENAI_API_KEY }}
           CLAUDE_MODEL: ${{ vars.CLAUDE_MODEL || 'claude-sonnet-4-6' }}
-          OPENAI_MODEL: ${{ vars.OPENAI_MODEL || 'gpt-4o' }}
-          SMTP_USER: ${{ secrets.SMTP_USER }}
-          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
-          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+          OPENAI_MODEL: ${{ vars.OPENAI_MODEL || 'gpt-5.2' }}
+          SMTP_USER: ${{ vars.SMTP_USER }}
+          SMTP_PASSWORD: ${{ vars.SMTP_PASSWORD }}
+          EMAIL_TO: ${{ vars.EMAIL_TO }}
           SMTP_HOST: ${{ vars.SMTP_HOST || 'smtp.gmail.com' }}
           SMTP_PORT: ${{ vars.SMTP_PORT || '465' }}
           SMTP_FROM_NAME: ${{ vars.SMTP_FROM_NAME || 'News Agent' }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python news_agent.py
