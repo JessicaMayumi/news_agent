@@ -32,14 +32,9 @@ class Insight(BaseModel):
 
 
 class Digest(BaseModel):
-    """Estrutura completa do digest diário de IA."""
+    """Estrutura completa do digest diário de IA: 10 notícias, 1 paper, 1 repo, 1 insight."""
 
-    top_news: List[NewsItem] = Field(
-        ...,
-        min_length=8,
-        max_length=10,
-        description="Top 10 notícias de IA das últimas 48-72h",
-    )
-    paper: PaperOfDay = Field(..., description="Paper do dia")
-    repo: RepoOfDay = Field(..., description="Repo open-source em alta")
-    insight: Insight = Field(..., description="Insight do dia")
+    top_news: List[NewsItem] = Field(..., min_length=8, max_length=10)
+    paper: PaperOfDay
+    repo: RepoOfDay
+    insight: Insight
