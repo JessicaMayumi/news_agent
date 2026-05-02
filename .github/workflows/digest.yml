@@ -24,33 +24,30 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Diagnose env vars (lengths only, no values)
+      - name: Diagnose secret presence (lengths only, no values)
         env:
-          ANTHROPIC_API_KEY: ${{ vars.ANTHROPIC_API_KEY }}
-          OPENAI_API_KEY: ${{ vars.OPENAI_API_KEY }}
-          SMTP_USER: ${{ vars.SMTP_USER }}
-          SMTP_PASSWORD: ${{ vars.SMTP_PASSWORD }}
-          EMAIL_TO: ${{ vars.EMAIL_TO }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
         run: |
           echo "ANTHROPIC_API_KEY length: ${#ANTHROPIC_API_KEY}"
           echo "OPENAI_API_KEY length: ${#OPENAI_API_KEY}"
           echo "SMTP_USER length: ${#SMTP_USER}"
           echo "SMTP_PASSWORD length: ${#SMTP_PASSWORD}"
           echo "EMAIL_TO length: ${#EMAIL_TO}"
-          echo "---"
-          echo "all var names available:"
-          echo '${{ toJSON(vars) }}' | python -c "import sys,json; d=json.load(sys.stdin); print(list(d.keys()))"
 
       - name: Run news agent
         env:
           MODEL_PROVIDER: ${{ vars.MODEL_PROVIDER || 'anthropic' }}
-          ANTHROPIC_API_KEY: ${{ vars.ANTHROPIC_API_KEY }}
-          OPENAI_API_KEY: ${{ vars.OPENAI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           CLAUDE_MODEL: ${{ vars.CLAUDE_MODEL || 'claude-sonnet-4-6' }}
           OPENAI_MODEL: ${{ vars.OPENAI_MODEL || 'gpt-5.2' }}
-          SMTP_USER: ${{ vars.SMTP_USER }}
-          SMTP_PASSWORD: ${{ vars.SMTP_PASSWORD }}
-          EMAIL_TO: ${{ vars.EMAIL_TO }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
           SMTP_HOST: ${{ vars.SMTP_HOST || 'smtp.gmail.com' }}
           SMTP_PORT: ${{ vars.SMTP_PORT || '465' }}
           SMTP_FROM_NAME: ${{ vars.SMTP_FROM_NAME || 'News Agent' }}
