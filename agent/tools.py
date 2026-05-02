@@ -1,11 +1,53 @@
 import json
 import os
 import re
+import time
 import urllib.parse
 import urllib.request
 from datetime import datetime, timedelta, timezone
 
 from agno.tools import tool
+
+
+@tool(show_result=False)
+def web_search(query: str, max_results: int = 5) -> str:
+    """Busca web genérica para notícias recentes. Tenta múltiplas vezes e tolera falhas.
+
+    Use para encontrar notícias gerais de IA. Faça queries variadas em inglês e português.
+
+    Args:
+        query: termo de busca (ex: 'OpenAI release May 2026', 'agente IA novo modelo')
+        max_results: número máximo de resultados (default 5)
+
+    Returns:
+        JSON com lista de {title, body, url}, ou {error, results: []} se tudo falhar.
+    """
+    try:
+        from ddgs import DDGS
+    except ImportError:
+        return json.dumps({"error": "ddgs not installed", "results": []})
+
+    last_err = None
+    for attempt in range(3):
+        try:
+            results = list(DDGS().text(query, max_results=max_results, region="wt-wt"))
+            if results:
+                return json.dumps(
+                    [
+                        {
+                            "title": r.get("title"),
+                            "body": r.get("body"),
+                            "url": r.get("href"),
+                        }
+                        for r in results
+                    ],
+                    ensure_ascii=False,
+                )
+        except Exception as e:
+            last_err = str(e)
+        time.sleep(1.5 * (attempt + 1))
+
+    return json.dumps({"error": last_err or "no results", "results": []})
 
 
 @tool(show_result=False)

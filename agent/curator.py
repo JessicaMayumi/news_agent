@@ -2,10 +2,14 @@ import os
 
 from agno.agent import Agent
 from agno.db.sqlite import SqliteDb
-from agno.tools.duckduckgo import DuckDuckGoTools
 
 from .schemas import Digest
-from .tools import fetch_arxiv_recent, fetch_github_trending, fetch_url_content
+from .tools import (
+    fetch_arxiv_recent,
+    fetch_github_trending,
+    fetch_url_content,
+    web_search,
+)
 
 
 def _build_model():
@@ -46,7 +50,7 @@ WORKFLOW (siga nesta ordem, pensando passo a passo):
    - Pesquisadores em destaque (X / LinkedIn)
 
 2. GATHER — Use TODAS as tools agressivamente:
-   - duckduckgo_search → faça 8-12 buscas variadas em INGLÊS e PORTUGUÊS
+   - web_search → faça 8-12 buscas variadas em INGLÊS e PORTUGUÊS (tolere falhas — algumas queries podem retornar vazio)
    - fetch_arxiv_recent → busque papers em cs.AI / cs.LG / cs.CL
    - fetch_github_trending → busque repos por tópicos (llm, agent, rag, diffusion)
    - fetch_url_content → quando o snippet de busca for raso, leia o artigo completo
@@ -80,7 +84,7 @@ def build_curator() -> Agent:
         name="AI News Curator",
         model=_build_model(),
         tools=[
-            DuckDuckGoTools(),
+            web_search,
             fetch_arxiv_recent,
             fetch_github_trending,
             fetch_url_content,

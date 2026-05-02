@@ -29,7 +29,7 @@ def main() -> int:
     prompt = (
         f"Gere o digest de IA de hoje. Data atual: {today}. "
         "Cubra notícias publicadas nas últimas 48-72 horas. "
-        "Use TODAS as ferramentas (duckduckgo_search, fetch_arxiv_recent, "
+        "Use TODAS as ferramentas (web_search, fetch_arxiv_recent, "
         "fetch_github_trending, fetch_url_content) antes de escrever o resultado final. "
         "Faça pelo menos 8 buscas web variadas em inglês e português."
     )
